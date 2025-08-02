@@ -1,0 +1,124 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // Настройка для сброса скролла при переходе по страницам
+    scrollRestoration: true,
+    // Отключаем строгую проверку для useSearchParams
+    serverActions: {
+      bodySizeLimit: '5mb',
+    }
+  },
+  // Добавляем standalone режим для production
+  output: 'standalone',
+  // Игнорируем ошибки TypeScript при сборке
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  // Игнорируем ошибки ESLint при сборке
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  images: {
+    // Разрешает использование внешних источников картинок
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+    // Улучшенные настройки для оптимизации изображений
+    formats: ['image/webp'],
+    minimumCacheTTL: 0, // Отключаем кэширование изображений
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    unoptimized: true, // Отключаем оптимизацию изображений для предотвращения кэширования
+  },
+  // Включение сжатия и оптимизации для уменьшения размера файлов
+  compress: true,
+  // Конфигурация кэширования для статичных активов
+  staticPageGenerationTimeout: 120,
+  // Конфигурация для HTTP-заголовков кэширования
+  async headers() {
+    return [
+      {
+        // Применяется ко всем маршрутам в /public
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Статические файлы могут кэшироваться дольше
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Для API-маршрутов можем использовать меньшее время кэширования
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, max-age=0',
+          },
+        ],
+      },
+      {
+        // Специальные заголовки для страницы календаря, чтобы отключить кэширование
+        source: '/cabinet/calendar',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0',
+          },
+        ],
+      },
+      {
+        // Отключаем кэширование для загруженных файлов
+        source: '/uploads/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+    ];
+  },
+  // Настройка перенаправлений для решения проблемы с редиректом на /cabinet/profile
+  async redirects() {
+    return [
+      {
+        source: '/cabinet/profile',
+        destination: '/cabinet',
+        permanent: false,
+        has: [
+          {
+            type: 'header',
+            key: 'x-special-redirect-fix',
+            value: 'true',
+          },
+        ],
+      },
+    ];
+  },
+  // Отключаем Strict Mode для тестирования и отладки
+  reactStrictMode: false,
+};
+
+module.exports = nextConfig; 

@@ -1,0 +1,10 @@
+      if (!response.ok) {
+        // Если ошибка авторизации - перенаправляем на страницу входа
+        if (response.status === 401) {
+          console.log('[Calendar] Не авторизован, перенаправление на страницу входа');
+          router.push('/login');
+          setLoading(false);
+          return;
+        }
+
+        throw new Error(\Ошибка при загрузке записей: \\);

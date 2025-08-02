@@ -1,0 +1,6 @@
+{
+  "specialistId": "test_specialist",
+  "userId": "test_user",
+  "rating": 5,
+  "text": "Тестовый отзыв для проверки загрузки изображений в API"
+} 
