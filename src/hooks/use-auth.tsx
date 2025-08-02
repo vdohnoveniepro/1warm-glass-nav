@@ -87,7 +87,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "Успешный вход",
         description: "Вы вошли через Telegram",
-        variant: "success",
       });
     }, 1000);
   };
@@ -129,7 +128,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "Успешный вход",
         description: "Вы вошли в свой аккаунт",
-        variant: "success",
       });
       
     } catch (err) {
@@ -186,7 +184,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "Успешный вход",
         description: "Вы вошли через Google",
-        variant: "success",
       });
       
     } catch (err) {
@@ -246,7 +243,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "Успешная регистрация",
         description: "Ваш аккаунт создан",
-        variant: "success",
       });
       
     } catch (err) {
