@@ -133,10 +133,6 @@ body {
     @apply transition-all duration-300 hover:translate-y-[-5px] hover:shadow-md;
   }
 
-  .frosted-glass {
-    @apply relative bg-white/70 backdrop-blur-xl border border-warmbeige-100/40 shadow-sm;
-  }
-
   .text-gradient {
     @apply bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent;
   }
@@ -177,28 +173,4 @@ body {
   100% {
     background-position: 200% 0;
   }
-}
-
-.calendar-wrapper {
-  @apply glass-card rounded-lg p-2 animate-fade-in;
-}
-
-.calendar-day {
-  @apply rounded-full hover:bg-indigo-100 transition-colors;
-}
-
-.calendar-day-selected {
-  @apply bg-indigo-500 text-white hover:bg-indigo-600;
-}
-
-.day-selector {
-  @apply flex flex-wrap justify-center gap-2 mb-4;
-}
-
-.day-selector-item {
-  @apply rounded-lg px-4 py-2 glass-card cursor-pointer hover:shadow-md transition-all;
-}
-
-.day-selector-item.selected {
-  @apply bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-transparent;
 }
