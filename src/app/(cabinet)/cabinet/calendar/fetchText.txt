@@ -1,0 +1,18 @@
+
+>   const fetchSpecialists = async () => {
+      try {
+        console.log('[Cabinet/Calendar] Загрузка специалистов...');
+        
+        // Получаем данные о всех специалистах
+        const response = await fetch('/api/specialists');
+        if (!response.ok) {
+          throw new Error('Ошибка при загрузке специалистов');
+        }
+        
+        let specialistsData: Specialist[] = [];
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          specialistsData = data.data;
+        } else if (Array.isArray(data)) {
+
