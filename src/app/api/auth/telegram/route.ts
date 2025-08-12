@@ -4,7 +4,8 @@ import { usersAPI } from '@/database/api/users';
 import { createToken } from '@/lib/auth';
 import { initDB } from '@/app/api/db';
 import crypto from 'crypto';
-import { TELEGRAM_BOT_TOKEN } from '@/lib/telegram-config';
+import { TELEGRAM_BOT_TOKEN } from '@/lib/server-telegram-config';
+import { isValidTelegramData, parseTelegramUserData } from '@/lib/telegram-auth';
 
 // Инициализируем базу данных SQLite
 initDB();
@@ -18,52 +19,7 @@ const processedRequests = new Map<string, { timestamp: number, response: NextRes
 // Время жизни кеша (5 минут)
 const CACHE_TTL = 5 * 60 * 1000;
 
-/**
- * Функция для проверки валидности данных от Telegram Mini App
- */
-function isValidTelegramData(initData: string): boolean {
-  try {
-    // Разбираем строку initData на параметры
-    const params = new URLSearchParams(initData);
-    const hash = params.get('hash');
-    
-    if (!hash) return false;
-    
-    // Удаляем hash из проверяемых данных
-    params.delete('hash');
-    
-    // Сортируем параметры по ключу
-    const sortedParams: [string, string][] = Array.from(params.entries()).sort();
-    const dataCheckString = sortedParams.map(([key, value]) => `${key}=${value}`).join('\n');
-    
-    // Создаем HMAC-SHA256 с использованием токена бота
-    const secretKey = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
-    const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
-    
-    // Сравниваем вычисленный хеш с полученным
-    return calculatedHash === hash;
-  } catch (error) {
-    console.error('Ошибка при проверке данных Telegram:', error);
-    return false;
-  }
-}
-
-/**
- * Функция для разбора данных пользователя из initData
- */
-function parseTelegramUserData(initData: string): { id: string; username?: string; first_name?: string; last_name?: string; photo_url?: string } | null {
-  try {
-    const params = new URLSearchParams(initData);
-    const userStr = params.get('user');
-    
-    if (!userStr) return null;
-    
-    return JSON.parse(decodeURIComponent(userStr));
-  } catch (error) {
-    console.error('Ошибка при разборе данных пользователя Telegram:', error);
-    return null;
-  }
-}
+// Валидация и парсинг Telegram вынесены в '@/lib/telegram-auth'
 
 /**
  * Очистка устаревших записей в кеше
